@@ -1,4 +1,7 @@
 
+import gym
+import gym_sumo
+
 import math
 import random
 import numpy as np 
@@ -6,6 +9,8 @@ from collections import namedtuple,deque
 from itertools import count
 
 import torch
+from torch.utils.tensorboard import SummaryWriter
+torch.manual_seed(0)
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
@@ -19,7 +24,7 @@ if is_ipython:
     from IPython import display
 
 plt.ion()
-import traci
+#import traci
 # implementation link:
 #https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
 
@@ -33,6 +38,7 @@ if platform.system() == "Windows":
 Transition = namedtuple('Transition', ('state','action','next_state','reward'))
 
 step_done = 0
+
 
 class ReplayMemory(object):
 	"""docstring for ReplayMemory"""
@@ -54,10 +60,11 @@ class DQN(nn.Module):
 
     def __init__(self, n_observations, n_actions):
         super(DQN, self).__init__()
-        self.layer1 = nn.Linear(n_observations, 512)
-        self.layer2 = nn.Linear(512, 1024)
-        self.layer3 = nn.Linear(1024, 512)
-        self.layer4 = nn.Linear(512,n_actions) 
+        self.layer1 = nn.Linear(n_observations, 256)
+        self.layer2 = nn.Linear(256, 512)
+        self.layer3 = nn.Linear(512, 256)
+        self.layer4 = nn.Linear(256,128)
+        self.layer5 = nn.Linear(128,n_actions) 
 
     # Called with either one element to determine next action, or a batch
     # during optimization. Returns tensor([[left0exp,right0exp]...]).
@@ -65,7 +72,8 @@ class DQN(nn.Module):
         x = F.relu(self.layer1(x))
         x = F.relu(self.layer2(x))
         x = F.relu(self.layer3(x))
-        return self.layer4(x)
+        x = F.relu(self.layer4(x))
+        return self.layer5(x)
 
 
 class Agent(object):
@@ -74,14 +82,16 @@ class Agent(object):
 		super(Agent, self).__init__()
 		self.arg = arg
 		self.batch_size = 32
-		self.gamma = 0.95
-		self.eps_start = 0.9
-		self.eps_end = 0.05
-		self.eps_decay = 1000
-		self.tau = 0.005
-		self.lr = 1e-3
+		self.gamma = 0.99
+		self.eps_start = 1.0
+		self.eps_end = 0.01
+		self.eps_decay = 100000
+		self.tau = 0.05
+		self.lr = 1e-5
 		self.n_actions = 5
-		self.n_observations = 11
+		self.n_observations = 19
+		self.writter = SummaryWriter()
+		self.episodic_loss = 0
 
 		self.episode_durations = []
 
@@ -96,6 +106,7 @@ class Agent(object):
 	def select_action(self,state):
 		global step_done
 		sample = random.random()
+		#print(f'Step: {step_done}')
 		eps_threshold = self.eps_end + (self.eps_start-self.eps_end)*math.exp(-1.*step_done/self.eps_decay)
 		step_done += 1
 
@@ -127,9 +138,10 @@ class Agent(object):
 		expected_state_action_values = (next_state_values * self.gamma) + reward_batch
 		criterion = nn.SmoothL1Loss()
 		loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
+		self.episodic_loss += loss
 		self.optimizer.zero_grad()
 		loss.backward()
-		torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
+		#torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
 		self.optimizer.step()
 
 	def updateTargetNetwork(self):
@@ -148,28 +160,30 @@ class Agent(object):
 	    if show_result:
 	        plt.title('Result')
 	    else:
-	        plt.clf()
+	        #plt.clf()
 	        plt.title('Training...')
 	    plt.xlabel('Episode')
 	    plt.ylabel('Duration')
 	    plt.plot(durations_t.numpy())
+	    plt.savefig("training_reward_test.png")
 	    # Take 100 episode averages and plot them too
-	    if len(durations_t) >= 100:
-	        means = durations_t.unfold(0, 100, 1).mean(1).view(-1)
-	        means = torch.cat((torch.zeros(99), means))
-	        plt.plot(means.numpy())
+	    # if len(durations_t) >= 100:
+	    #     means = durations_t.unfold(0, 100, 1).mean(1).view(-1)
+	    #     means = torch.cat((torch.zeros(99), means))
+	    #     plt.plot(means.numpy())
 
-	    plt.pause(0.001)  # pause a bit so that plots are updated
-	    if is_ipython:
-	        if not show_result:
-	            display.display(plt.gcf())
-	            display.clear_output(wait=True)
-	        else:
-	            display.display(plt.gcf())
+	    # plt.pause(0.001)  # pause a bit so that plots are updated
+	    # if is_ipython:
+	    #     if not show_result:
+	    #         display.display(plt.gcf())
+	    #         display.clear_output(wait=True)
+	    #     else:
+	    #         display.display(plt.gcf())
 
 	def train_pole(self, env):
 		for e in range(5000):
 			state, info = env.reset()
+			print(state)
 			r_r = 0
 			state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)
 			for t in count():
@@ -201,10 +215,7 @@ class Agent(object):
 
 	def train_RL(self, env):
 		for e in range(5000):
-			isGui = True if (e+1)%10==0 else False
-			env.startSumo(isGui)
-			env.warmup()
-			state = env.reset()
+			state, info = env.reset()
 			r_r = 0
 			state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)
 			for t in count():
@@ -212,6 +223,8 @@ class Agent(object):
 				action = self.select_action(state)
 				observation, reward, terminated, _ = env.step(action.item())
 				r_r += reward
+				if reward == -10:
+					print(f'Collision: {reward}')
 				reward = torch.tensor([reward], device=device)
 				done = terminated
 				if terminated:
@@ -224,20 +237,25 @@ class Agent(object):
 
 				self.learn_model()
 				self.updateTargetNetwork()
+				if (e+1)%2 == 0:
+					torch.save(self.policy_net.state_dict(), "models/model_test.pth")
 
 				if done:
 					self.episode_durations.append(r_r)
 					self.plot_durations()
-					env.closeSumo()
+					env.closeEnvConnection()
 					print(f'Episodes:{e+1}, Reward: {r_r}')
 					break
-				if isGui:
-					x, y = traci.vehicle.getPosition('av_0')
-					traci.gui.setOffset("View #0",x-23.0,108.49)
+				env.move_gui()
+			self.writter.add_scalar("Loss/train", self.episodic_loss, (e+1))
+			self.writter.add_scalar("Reward/Train", r_r, (e+1))
+			self.writter.flush()
+			self.episodic_loss = 0.0
 		self.plot_durations(show_result=True)
 		plt.ioff()
 		plt.show()
-		env.closeSumo()
+		env.closeEnvConnection()
+		self.writter.close()
 
 
 
