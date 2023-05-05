@@ -1,5 +1,5 @@
 # RLDeepNavigation
-Reach destination in short time. Autonomous vehicle (RL) agents reach its destination 
+## ***Drive through deep. Intellignet Autonomous agent in highway Lane change and Driving scenario.***
 
 ### A reinforcement learning framework for an autonomous vehicle to learn lateral and longitudinal control to navigate through deep traffic.
 
@@ -26,7 +26,7 @@ We formulate the high driving and lane changing problem as a Markov decision pro
 ### State Space:
 The state space contains 19 different states of current environment conditions; from ego vehicle (aka RL agent) and its 3 leaders from inlane, target-left lane, target-right lane, and lanes average speed, and lanes density
 ### Action Space
-5 discreate values that map
+5 discreate action values that map
 + 0 --> Keep current lane and speed
 + 1 --> Change lane left
 + 2 --> Change lane right
