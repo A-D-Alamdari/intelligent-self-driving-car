@@ -1,7 +1,7 @@
 # RLDeepNavigation
 Reach destination in short time. Autonomous vehicle (RL) agents reach its destination 
 
-# A reinforcement learning framework for an autonomous vehicle to learn lateral and longitudinal control to navigate through deep traffic.
+### A reinforcement learning framework for an autonomous vehicle to learn lateral and longitudinal control to navigate through deep traffic.
 
 Taks Objectives:
 - Make an autonomous agent to learn lane change and longitudinal control to navigate through deep traffic while maintaining better safety and higher traffic flow
@@ -46,7 +46,7 @@ The reward function consists of a efficiency reward, lane change penalty reward,
 
 ### Safety Reward
 <p align="center">
-    <img src="./images/safety.png" width="160" height="40"/>
+    <img src="./images/safety.png" width="200" height="45"/>
 </p>
 
 ### Lane Change Penalty
