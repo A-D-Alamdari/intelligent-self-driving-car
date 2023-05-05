@@ -19,6 +19,7 @@ Taks Objectives:
 ``` Ruby
 git@github.com:lokesh-c-das/AutonousVehicleDeepNavigation.git
 cd SUMO-RL-ENVIRONMENT
+cd gym_sumo
 pip install -e .
 ```
 ## Highway driving & lane changing problem formulation
