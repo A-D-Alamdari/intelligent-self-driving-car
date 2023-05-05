@@ -27,11 +27,11 @@ We formulate the high driving and lane changing problem as a Markov decision pro
 The state space contains 19 different states of current environment conditions; from ego vehicle (aka RL agent) and its 3 leaders from inlane, target-left lane, target-right lane, and lanes average speed, and lanes density
 ### Action Space
 5 discreate values that map
-0 --> Keep current lane and speed
-1 --> Change lane left
-2 --> Change lane right
-3 --> Accelerate (Constant amount)
-4 --> Decelerate (Constant Amount)
++ 0 --> Keep current lane and speed
++ 1 --> Change lane left
++ 2 --> Change lane right
++ 3 --> Accelerate (Constant amount)
++ 4 --> Decelerate (Constant Amount)
 ### Reward
 The reward function consists of a efficiency reward, lane change penalty reward, and a safety reward
 
