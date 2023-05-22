@@ -60,5 +60,5 @@ The reward function consists of a efficiency reward, lane change penalty reward,
 #### Training Reward and Loss
 ![Loss](./images/results/Loss_train-2.png)![Reward](./images/results/Reward_Train-2.png)
 
-#### Agent learn deep navigation with lane change
+#### Agent learned deep navigation with intelligent lane change
 ![navigation](./images/results/trimed-value.gif)
