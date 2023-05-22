@@ -17,7 +17,7 @@ Taks Objectives:
 #### Install Latest version of [SUMO](https://sumo.dlr.de/docs/Downloads.php)
 #### Install custom SUMO Environment
 ``` Ruby
-git@github.com:lokesh-c-das/AutonousVehicleDeepNavigation.git
+git clone git@github.com:lokesh-c-das/intelligent-self-driving-car.git
 cd SUMO-RL-ENVIRONMENT
 cd gym_sumo
 pip install -e .
