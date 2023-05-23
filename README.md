@@ -1,10 +1,9 @@
 #### Agent learned deep navigation with intelligent lane change
 ![navigation](./images/results/trimed-value.gif)
 
-# RLDeepNavigation
-Drive through deep. Intellignet Autonomous agent in highway Lane change and Driving scenario.***
+# Drive Through Deep- An Intellignet Autonomous agent in highway Lane change and Driving scenario.***
 
-### A reinforcement learning framework for an autonomous vehicle to learn lateral and longitudinal control to navigate through deep traffic.
+##### A reinforcement learning framework of a self-driving car to learn lateral and longitudinal control while navigating through deep traffic.
 
 Taks Objectives:
 - Make an autonomous agent to learn lane change and longitudinal control to navigate through deep traffic while maintaining better safety and higher traffic flow
