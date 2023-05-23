@@ -2,7 +2,7 @@
 ![navigation](./images/results/trimed-value.gif)
 
 # RLDeepNavigation
-## ***Drive through deep. Intellignet Autonomous agent in highway Lane change and Driving scenario.***
+Drive through deep. Intellignet Autonomous agent in highway Lane change and Driving scenario.***
 
 ### A reinforcement learning framework for an autonomous vehicle to learn lateral and longitudinal control to navigate through deep traffic.
 
