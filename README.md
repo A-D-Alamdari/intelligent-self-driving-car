@@ -1,7 +1,7 @@
 #### Agent learned deep navigation with intelligent lane change
 ![navigation](./images/results/trimed-value.gif)
 
-# Drive Through Deep- An Intellignet Autonomous agent in highway Lane change and Driving scenario.***
+# Drive Through Deep - An Intellignet Autonomous agent in highway Lane change and Driving scenario.
 
 ##### A reinforcement learning framework of a self-driving car to learn lateral and longitudinal control while navigating through deep traffic.
 
