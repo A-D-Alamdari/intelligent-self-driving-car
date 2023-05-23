@@ -1,3 +1,6 @@
+#### Agent learned deep navigation with intelligent lane change
+![navigation](./images/results/trimed-value.gif)
+
 # RLDeepNavigation
 ## ***Drive through deep. Intellignet Autonomous agent in highway Lane change and Driving scenario.***
 
@@ -60,5 +63,3 @@ The reward function consists of a efficiency reward, lane change penalty reward,
 #### Training Reward and Loss
 ![Loss](./images/results/Loss_train-2.png)![Reward](./images/results/Reward_Train-2.png)
 
-#### Agent learned deep navigation with intelligent lane change
-![navigation](./images/results/trimed-value.gif)
